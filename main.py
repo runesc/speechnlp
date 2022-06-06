@@ -8,10 +8,33 @@ app = Flask(__name__)
 def index():
 	transcript = request.json['text']
 
-	result = IA(transcript)
+	# split the transcript into words
+	words = transcript.split()
+	results = []
+	for word in words:
+		intent = IA(word) # this returns something like: [ ['value', 'tenis'],  ['product', 0.9013374940145231] ]
+		
+		if intent != [] and len(intent) > 1:
+			obj = {
+				'value': intent[0][1],
+				'confidence': intent[1][1],
+				'intent': intent[1][0]
+			}
+			results.append(obj)
+
+	response = {
+		'code': 200,
+		'results': [x for x in results],
+		'transcription': transcript
+	}
+
+	return jsonify(response)
+
+	"""print(result)
 	
-	if result == 'error' or result == []:
-		return jsonify({'code': 500, 'message': 'no command found'})
+
+
+	
 
 	response_format = {
 		'code': 200,
@@ -22,7 +45,9 @@ def index():
 	for result in result:
 		response_format['results'].append({ 'intent': result[0], 'confidence': result[1] })
 
-	return jsonify(response_format)
+
+
+	return jsonify(response_format)"""
 
 
 @app.route('/')

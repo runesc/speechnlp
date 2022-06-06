@@ -21,28 +21,30 @@ stemmer = LancasterStemmer()
 # datos de entrenamiento
 training_data = []
 # Saludos
-training_data.append({"class":"turn_on_light", "sentence":"Enciende la luz"})
-training_data.append({"class":"turn_on_light", "sentence":"Prende el foco"})
-training_data.append({"class":"turn_on_light", "sentence":"No veo nada"})
-training_data.append({"class":"turn_on_light", "sentence":"Ilumina la habitacion"})
-training_data.append({"class":"turn_on_light", "sentence":"Encender luces"})
-# Preguntas
-training_data.append({"class":"get_temperature", "sentence":"Como esta clima"})
-training_data.append({"class":"get_temperature", "sentence":"tengo frío"})
-training_data.append({"class":"get_temperature","sentence":"tengo calor"})
-training_data.append({"class":"get_temperature", "sentence":"clima de"})
 
-# Preguntas a IA
-training_data.append({"class":"turn_off_light", "sentence":"Apaga la luz"})
-training_data.append({"class":"turn_off_light", "sentence":"Apaga el foco"})
-training_data.append({"class":"turn_off_light", "sentence":"Fuera luces"})
-training_data.append({"class":"turn_off_light", "sentence":"Apagar luces"})
+training_data.append({"class":"product", "sentence":"tenis"})
+training_data.append({"class":"product", "sentence":"camiseta"})
+training_data.append({"class":"product", "sentence":"pantalon"})
+training_data.append({"class":"product", "sentence":"calcetines"})
+training_data.append({"class":"product", "sentence":"lentes"})
 
-training_data.append({"class": "saludo", "sentence": "Hola"})
-training_data.append({"class": "saludo", "sentence": "que onda"})
+training_data.append({"class":"brand", "sentence":"nike"})
+training_data.append({"class":"brand", "sentence":"adidas"})
+training_data.append({"class":"brand", "sentence":"puma"})
+training_data.append({"class":"brand", "sentence":"reebok"})
+training_data.append({"class":"brand", "sentence":"tommy"})
 
-training_data.append({"class": "sex_mode", "sentence": "modo sexo"})
+training_data.append({"class":"color", "sentence":"rojo"})
+training_data.append({"class":"color", "sentence":"azul"})
+training_data.append({"class":"color", "sentence":"verde"})
+training_data.append({"class":"color", "sentence":"amarillo"})
+training_data.append({"class":"color", "sentence":"negro"})
 
+training_data.append({"class":"off_light", "sentence":"apaga la luz"})
+training_data.append({"class":"off_light", "sentence":"apagar luces"})
+
+training_data.append({"class":"on_light", "sentence":"enciende la luz"})
+training_data.append({"class":"on_light", "sentence":"encender luces"})
 
 
 # error
@@ -152,8 +154,8 @@ def think(sentence, show_details=False):
 
 def train(X, y, hidden_neurons=10, alpha=0.1, epochs=1000, dropout=True, dropout_percent=0.2):
 
-    #print ("Training with %s neurons, alpha:%s, dropout:%s %s" % (hidden_neurons, str(alpha), dropout, dropout_percent if dropout else '') )
-    #print ("Input matrix: %sx%s    Output matrix: %sx%s" % (len(X),len(X[0]),1, len(classes)) )
+    print ("Training with %s neurons, alpha:%s, dropout:%s %s" % (hidden_neurons, str(alpha), dropout, dropout_percent if dropout else '') )
+    print ("Input matrix: %sx%s    Output matrix: %sx%s" % (len(X),len(X[0]),1, len(classes)) )
     np.random.seed(1)
 
     last_mean_error = 1
@@ -254,6 +256,9 @@ def classify(sentence, show_details=False):
     results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
     results.sort(key=lambda x: x[1], reverse=True) 
     return_results =[[classes[r[0]],r[1]] for r in results]
+
+    # insert into return_results the current sentence
+    return_results.insert(0, ['value', sentence])
 
     #print ("%s \n classification: %s" % (sentence, return_results))
     return return_results
